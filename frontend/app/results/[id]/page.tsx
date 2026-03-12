@@ -19,8 +19,8 @@ import Logo from '../../../components/Logo';
 
 const StatCard = ({ icon: Icon, label, value, color, delay }: any) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
     transition={{ delay }}
     className={`${styles.statCard} glass`}
   >
@@ -35,16 +35,56 @@ const StatCard = ({ icon: Icon, label, value, color, delay }: any) => (
 );
 
 export default function ResultsPage({ params }: { params: { id: string } }) {
-  const results = [
-    { subject: 'English Language', score: 52, total: 60, color: '#1F3A8A' },
-    { subject: 'Mathematics', score: 32, total: 40, color: '#10B981' },
-    { subject: 'Physics', score: 28, total: 40, color: '#F97316' },
-    { subject: 'Chemistry', score: 31, total: 40, color: '#8B5CF6' },
+  const [results, setResults] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const savedResults = localStorage.getItem(`exam_results_${params.id}`);
+    if (savedResults) {
+      setResults(JSON.parse(savedResults));
+    } else {
+      setResults([
+        { subject: 'English Language', score: 0, total: 60, color: '#1F3A8A' },
+        { subject: 'Mathematics', score: 0, total: 40, color: '#10B981' },
+        { subject: 'Physics', score: 0, total: 40, color: '#F97316' },
+        { subject: 'Chemistry', score: 0, total: 40, color: '#8B5CF6' },
+      ]);
+    }
+    setLoading(false);
+  }, [params.id]);
+
+  const [showReview, setShowReview] = React.useState(false);
+  
+  const mockReviewData = [
+    { 
+      subject: "English Language",
+      question: "Choose the option that is nearest in meaning to the underlined word: The professor's lecture was rather URBANE.", 
+      userAnswer: "B", 
+      correctAnswer: "A", 
+      explanation: "Urbane means 'polished' or 'sophisticated'. Option B (Rude) is the opposite." 
+    },
+    { 
+      subject: "Mathematics",
+      question: "Find the value of x if 2x + 5 = 15.", 
+      userAnswer: "5", 
+      correctAnswer: "5", 
+      explanation: "Subtract 5 from both sides: 2x = 10. Divide by 2: x = 5. Your answer is correct." 
+    },
+    { 
+      subject: "Physics",
+      question: "What is the SI unit of Force?", 
+      userAnswer: "Newton", 
+      correctAnswer: "Newton", 
+      explanation: "The Newton (N) is the derived SI unit of force. You got it right!" 
+    }
   ];
 
   const totalScore = results.reduce((acc, curr) => acc + curr.score, 0);
+
   const totalPossible = results.reduce((acc, curr) => acc + curr.total, 0);
-  const overallPercentage = (totalScore / totalPossible) * 100;
+  const overallPercentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : 0;
+
+  if (loading) return <div className={styles.resultsWrapper} style={{display:'flex', alignItems:'center', justifyContent:'center'}}>Loading results...</div>;
 
   return (
     <div className={styles.resultsWrapper}>
@@ -83,8 +123,8 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         {/* Hero Score Visualization */}
         <section className={styles.scoreHero}>
           <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className={styles.scoreDisplay}
           >
              <div className={styles.scoreCircle}>
@@ -95,7 +135,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                     cx="50" cy="50" r="45"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: overallPercentage / 100 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
                   />
                 </svg>
                 <div className={styles.scoreText}>
@@ -104,24 +144,29 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                 </div>
              </div>
              <motion.div 
-               initial={{ y: 20, opacity: 0 }}
-               animate={{ y: 0, opacity: 1 }}
-               transition={{ delay: 1 }}
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
                className={styles.scoreFeedback}
              >
-                <div className={styles.feedbackBadge}>
-                   <Trophy size={16} /> Ready for Success
+                <div className={styles.feedbackBadge} style={{ background: overallPercentage >= 50 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: overallPercentage >= 50 ? 'var(--color-secondary)' : 'var(--color-danger)' }}>
+                   <Trophy size={16} /> {overallPercentage >= 75 ? 'Distinction' : overallPercentage >= 50 ? 'Good Standing' : 'Keep Practicing'}
                 </div>
-                <h2>Excellent Performance!</h2>
-                <p>You are in the top 2% of mock participants this week. Keep maintaining this consistency.</p>
+                <h2>{overallPercentage >= 75 ? 'Excellent Performance!' : overallPercentage >= 50 ? 'Great Effort!' : 'Room for Growth'}</h2>
+                <p>
+                  {overallPercentage >= 75 
+                    ? 'You are in the top 2% of mock participants this week. Keep maintaining this consistency.' 
+                    : overallPercentage >= 50 
+                    ? 'You have a solid grasp of the core concepts. A little more practice will push you to the top.' 
+                    : 'Don\'t be discouraged. Review your corrections below and focus on your weaker areas.'}
+                </p>
              </motion.div>
           </motion.div>
 
           {/* Quick Stats Grid */}
           <div className={styles.statsGrid}>
-             <StatCard icon={Target} label="Accuracy" value="88.2%" color="#10B981" delay={1.2} />
-             <StatCard icon={Zap} label="Efficiency" value="1.2m/q" color="#F97316" delay={1.3} />
-             <StatCard icon={TrendingUp} label="Improvement" value="+5.4pts" color="#1F3A8A" delay={1.4} />
+             <StatCard icon={Target} label="Accuracy" value={`${overallPercentage.toFixed(1)}%`} color="#10B981" delay={0.2} />
+             <StatCard icon={Zap} label="Efficiency" value="1.2m/q" color="#F97316" delay={0.3} />
+             <StatCard icon={TrendingUp} label="Improvement" value="+5.4pts" color="#1F3A8A" delay={0.4} />
           </div>
         </section>
 
@@ -136,9 +181,9 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             {results.map((res, idx) => (
               <motion.div 
                 key={idx}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.5 + idx * 0.1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 + idx * 0.1 }}
                 className={`${styles.subjectItem} glass`}
               >
                 <div className={styles.itemSubject}>
@@ -160,18 +205,48 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                         style={{ background: res.color }}
                         initial={{ width: 0 }}
                         animate={{ width: `${(res.score / res.total) * 100}%` }}
-                        transition={{ duration: 1.5, delay: 2 + idx * 0.1 }}
+                        transition={{ duration: 1, delay: 0.8 + idx * 0.1 }}
                       />
                    </div>
                 </div>
 
-                <button className={styles.reviewBtn}>
+                <button className={styles.reviewBtn} onClick={() => setShowReview(true)}>
                    Review Answers <ChevronRight size={18} />
                 </button>
               </motion.div>
             ))}
           </div>
         </section>
+
+        {showReview && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={styles.reviewModal}
+          >
+            <div className={styles.modalHeader}>
+              <h2>Correction Detail</h2>
+              <button onClick={() => setShowReview(false)} className={styles.closeBtn}>Close</button>
+            </div>
+            <div className={styles.reviewList}>
+              {mockReviewData.map((item, i) => (
+                <div key={i} className={styles.reviewItem}>
+                  <p className={styles.reviewQ}><strong>Q{i+1}:</strong> {item.question}</p>
+                  <div className={styles.reviewStatus}>
+                    <p className={item.userAnswer === item.correctAnswer ? styles.correct : styles.wrong}>
+                      Your Answer: {item.userAnswer}
+                    </p>
+                    {item.userAnswer !== item.correctAnswer && (
+                      <p className={styles.correctVal}>Correct Answer: {item.correctAnswer}</p>
+                    )}
+                  </div>
+                  <p className={styles.explanation}><em>Explanation:</em> {item.explanation}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
 
         <footer className={styles.footerPanel}>
            <button className="btn btn-secondary" onClick={() => window.location.href = '/dashboard'}>

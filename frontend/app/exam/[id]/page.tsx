@@ -16,16 +16,51 @@ import styles from '../../../styles/ExamInterface.module.css';
 import Logo from '../../../components/Logo';
 
 // Mock generator for 45 questions per subject
+// Sophisticated Mock Question Generator for authentic JAMB experience
 const generateMockQuestions = (subject: string, startId: number) => {
-  return Array.from({ length: 45 }).map((_, i) => ({
-    id: startId + i,
-    question_number: i + 1,
-    subject: subject,
-    topic: 'General Assessment',
-    question_text: `This is a sample question ${i + 1} for ${subject}. Solve for X or choose the most appropriate answer based on the JAMB syllabus.`,
-    options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' },
-    correct_answer: 'A'
-  }));
+  const templates: Record<string, { q: string, options: string[] }[]> = {
+    'English Language': [
+      { q: "Choose the option that is nearest in meaning to the underlined word: The professor's lecture was rather URBANE.", options: ["Polished", "Rude", "Loud", "Boring"] },
+      { q: "Fill in the blank: The students were ________ to leave the exam hall early.", options: ["Forbidden", "Allowed", "Required", "Encouraged"] },
+      { q: "Identify the figure of speech: 'The waves danced along the shore.'", options: ["Personification", "Metaphor", "Simile", "Oxymoron"] }
+    ],
+    'Mathematics': [
+      { q: "Find the value of x if 2x + 5 = 15.", options: ["5", "10", "15", "20"] },
+      { q: "Calculate the area of a circle with radius 7cm (Take π = 22/7).", options: ["154cm²", "44cm²", "14cm²", "49cm²"] },
+      { q: "Factorize completely: x² - 5x + 6.", options: ["(x-2)(x-3)", "(x+2)(x+3)", "(x-1)(x-6)", "(x+1)(x+6)"] }
+    ],
+    'Physics': [
+      { q: "What is the SI unit of Force?", options: ["Newton", "Joule", "Watt", "Pascal"] },
+      { q: "The process by which heat travels through a vacuum is called?", options: ["Radiation", "Conduction", "Convection", "Evaporation"] },
+      { q: "Which of the following is a fundamental quantity?", options: ["Mass", "Force", "Work", "Velocity"] }
+    ],
+    'Chemistry': [
+      { q: "What is the chemical formula for common salt?", options: ["NaCl", "KCl", "NaOH", "HCl"] },
+      { q: "Which of the following is an alkaline earth metal?", options: ["Magnesium", "Sodium", "Iron", "Gold"] },
+      { q: "The gas that turns lime water milky is?", options: ["Carbon dioxide", "Oxygen", "Hydrogen", "Nitrogen"] }
+    ]
+  };
+
+  const subjectTemplates = templates[subject] || templates['English Language'];
+  const questionCount = subject === 'English Language' ? 60 : 40;
+
+  return Array.from({ length: questionCount }).map((_, i) => {
+    const template = subjectTemplates[i % subjectTemplates.length];
+    return {
+      id: startId + i,
+      question_number: i + 1,
+      subject: subject,
+      topic: 'Core Syllabus Assessment',
+      question_text: template.q.replace('question', `question ${i + 1}`),
+      options: { 
+        A: template.options[0], 
+        B: template.options[1], 
+        C: template.options[2], 
+        D: template.options[3] 
+      },
+      correct_answer: 'A'
+    };
+  });
 };
 
 export default function ExamInterface({ params }: { params: { id: string } }) {
@@ -64,6 +99,30 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
+        
+        // Calculate real scores based on actual user answers
+        const calculatedResults = subjects.map(sub => {
+            const subjectQuestions = questionsMap[sub];
+            let score = 0;
+            subjectQuestions.forEach(q => {
+                const userAnswer = answers[`${sub}-${q.question_number}`];
+                if (userAnswer === q.correct_answer) {
+                    score++;
+                }
+            });
+            return {
+                subject: sub,
+                score: score,
+                total: subjectQuestions.length,
+                color: sub === 'English Language' ? '#1F3A8A' : 
+                       sub === 'Mathematics' ? '#10B981' :
+                       sub === 'Physics' ? '#F97316' : '#8B5CF6'
+            };
+        });
+
+        // Persist results for the Results page to pick up
+        localStorage.setItem(`exam_results_${params.id}`, JSON.stringify(calculatedResults));
+
         setTimeout(() => {
             window.location.href = `/results/${params.id}`;
         }, 2000);
@@ -133,8 +192,9 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                     <div className={styles.questionContainer}>
                         <motion.div 
                           key={`${activeSubjectIdx}-${currentQuestionIdx}`}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
                           className={styles.questionCard}
                         >
                             <div className={styles.questionMetadata}>
@@ -150,8 +210,7 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                                 {Object.entries(currentQ.options).map(([key, value]: [string, string]) => (
                                     <motion.button
                                         key={key}
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
+                                        whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAnswerSelect(key)}
                                         className={`${styles.optionBtn} ${answers[`${subjects[activeSubjectIdx]}-${currentQ.question_number}`] === key ? styles.optionSelected : ''} glass`}
                                     >
@@ -206,7 +265,7 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                            initial={{ x: 300 }}
                            animate={{ x: 0 }}
                            exit={{ x: 300 }}
-                           className={`${styles.questionPalette} glass-dark`}
+                           className={`${styles.questionPalette} ${showPalette ? 'show' : ''} glass-dark`}
                         >
                             <div className={styles.paletteHeader}>
                                 <h3>{subjects[activeSubjectIdx]} Palette</h3>

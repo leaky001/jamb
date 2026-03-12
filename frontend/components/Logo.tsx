@@ -16,10 +16,8 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
       pathLength: 1, 
       opacity: 1,
       transition: { 
-        duration: 2, 
+        duration: 1.5, 
         ease: "easeInOut",
-        repeat: animated ? Infinity : 0,
-        repeatType: "mirror" as const
       }
     }
   };
@@ -38,10 +36,6 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* The "Strong Tower" Minimalist Symbol */}
-        {/* A geometric construction representing a pillar of knowledge and a shield of success */}
-        
-        {/* Outer Shield Frame */}
         <motion.path
           d="M20 4L34 10V22C34 30 28 36 20 38C12 36 6 30 6 22V10L20 4Z"
           stroke={color}
@@ -51,7 +45,6 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
           variants={pathVariants}
         />
         
-        {/* Internal Central Pillar */}
         <motion.rect
           x="18"
           y="12"
@@ -61,11 +54,10 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
           fill={color}
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5, repeat: animated ? Infinity : 0, repeatType: "mirror" }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           style={{ transformOrigin: 'bottom' }}
         />
         
-        {/* Lateral Decorative Pillars */}
         <motion.rect
           x="12"
           y="18"
@@ -75,7 +67,7 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
           fill={color}
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 0.6 }}
-          transition={{ duration: 1.2, delay: 0.2, repeat: animated ? Infinity : 0, repeatType: "mirror" }}
+          transition={{ duration: 1, delay: 0.1 }}
           style={{ transformOrigin: 'bottom' }}
         />
         <motion.rect
@@ -87,11 +79,10 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
           fill={color}
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 0.6 }}
-          transition={{ duration: 1.2, delay: 0.2, repeat: animated ? Infinity : 0, repeatType: "mirror" }}
+          transition={{ duration: 1, delay: 0.1 }}
           style={{ transformOrigin: 'bottom' }}
         />
         
-        {/* Top "Cap" - Representing Graduation/Peak */}
         <motion.path
           d="M15 12L20 8L25 12"
           stroke={color}
@@ -104,5 +95,6 @@ const Logo = ({ size = 32, color = '#1F3A8A', animated = true }: LogoProps) => {
     </motion.div>
   );
 };
+
 
 export default Logo;

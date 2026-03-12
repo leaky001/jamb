@@ -18,6 +18,27 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/icon.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('error', (event) => {
+                if (event.message && (
+                  event.message.includes('ethereum') || 
+                  event.message.includes('chrome-extension') ||
+                  event.message.includes('Object.defineProperty')
+                )) {
+                  event.stopImmediatePropagation();
+                }
+              }, true);
+
+              window.addEventListener('unhandledrejection', (event) => {
+                if (event.reason && event.reason.stack && event.reason.stack.includes('chrome-extension')) {
+                  event.stopImmediatePropagation();
+                }
+              }, true);
+            `,
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>

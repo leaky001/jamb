@@ -38,6 +38,13 @@
   opacity: 0.1;
 }
 
+@media (max-width: 768px) {
+  .blobMain, .blobSecondary {
+    display: none !important;
+  }
+}
+
+
 .resultsMain {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -152,6 +159,13 @@
   stroke: var(--color-primary);
   filter: drop-shadow(0 0 10px var(--color-primary-glow));
 }
+
+@media (max-width: 768px) {
+  .circlePath {
+    filter: none !important;
+  }
+}
+
 
 .scoreText {
   position: absolute;
@@ -341,7 +355,91 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Responsive */
+/* Review Modal Styles */
+.reviewModal {
+  margin-top: 40px;
+  padding: 30px;
+  background: var(--surface-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+  .reviewModal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 10%;
+    margin-top: 0;
+    border-radius: 30px 30px 0 0;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+  }
+}
+
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+}
+
+.modalHeader h2 {
+  font-size: 1.5rem;
+  font-family: var(--font-secondary);
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewItem {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.reviewQ {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.reviewStatus {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.correct { color: var(--color-secondary); }
+.wrong { color: var(--color-danger); }
+.correctVal { color: var(--color-secondary); }
+
+.explanation {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  line-height: 1.5;
+}
+
+/* Existing Responsive adjustments */
 @media (max-width: 1024px) {
   .scoreHero { grid-template-columns: 1fr; }
   .scoreDisplay { gap: 40px; padding: 40px; }
@@ -351,3 +449,4 @@
   .itemProgress { padding: 0; width: 100%; }
   .reviewBtn { border-left: none; padding-left: 0; }
 }
+
