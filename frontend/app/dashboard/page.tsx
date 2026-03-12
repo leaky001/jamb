@@ -43,15 +43,15 @@ const AVAILABLE_SUBJECTS = [
   { id: 'comm', name: 'Commerce', desc: 'Trade, Finance, Marketing', students: '7k+', icon: Briefcase }
 ];
 
-const SidebarItem = ({ icon: Icon, label, active = false, onClick }: any) => (
+const SidebarItem = ({ icon: Icon, label, active = false, onClick, isYellow }: any) => (
   <motion.button 
     whileHover={{ x: 5 }}
     onClick={onClick}
-    className={`${styles.sidebarItem} ${active ? styles.activeSidebarItem : ''}`}
+    className={`${styles.sidebarItem} ${active ? (isYellow ? styles.activeSidebarItemYellow : styles.activeSidebarItem) : ''}`}
   >
     <Icon size={20} />
     <span>{label}</span>
-    {active && <motion.div layoutId="activePill" className={styles.activePill} />}
+    {active && <motion.div layoutId="activePill" className={`${styles.activePill} ${isYellow ? styles.activePillYellow : ''}`} />}
   </motion.button>
 );
 
@@ -60,6 +60,7 @@ export default function Dashboard() {
   const [isStarting, setIsStarting] = useState(false);
   const [currentView, setCurrentView] = useState<'dashboard' | 'history' | 'performance'>('dashboard');
   const [examHistory, setExamHistory] = useState<any[]>([]);
+  const [isYellowTheme, setIsYellowTheme] = useState(false);
 
   React.useEffect(() => {
     // Load history from localStorage
@@ -111,19 +112,31 @@ export default function Dashboard() {
         <nav className={styles.sidebarNav}>
           <div className={styles.navGroup}>
             <p className={styles.navGroupLabel}>Menu</p>
-            <SidebarItem icon={LayoutDashboard} label="Dashboard" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
-            <SidebarItem icon={History} label="Exam History" active={currentView === 'history'} onClick={() => setCurrentView('history')} />
-            <SidebarItem icon={TrendingUp} label="Performance" active={currentView === 'performance'} onClick={() => setCurrentView('performance')} />
+            <SidebarItem icon={LayoutDashboard} label="Dashboard" active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} isYellow={isYellowTheme} />
+            <SidebarItem icon={History} label="Exam History" active={currentView === 'history'} onClick={() => setCurrentView('history')} isYellow={isYellowTheme} />
+            <SidebarItem icon={TrendingUp} label="Performance" active={currentView === 'performance'} onClick={() => setCurrentView('performance')} isYellow={isYellowTheme} />
           </div>
 
           <div className={styles.navGroup}>
             <p className={styles.navGroupLabel}>Settings</p>
-            <SidebarItem icon={User} label="Profile" />
-            <SidebarItem icon={Settings} label="Preferences" />
+            <SidebarItem icon={User} label="Profile" isYellow={isYellowTheme} />
+            <SidebarItem icon={Settings} label="Preferences" isYellow={isYellowTheme} />
           </div>
         </nav>
 
         <div className={styles.sidebarFooter}>
+          <div className={styles.themeToggleArea}>
+             <span>Amber Mode</span>
+             <div 
+               className={`${styles.toggleSwitch} ${isYellowTheme ? styles.toggleActive : ''}`}
+               onClick={() => setIsYellowTheme(!isYellowTheme)}
+             >
+                <motion.div 
+                  animate={{ x: isYellowTheme ? 22 : 0 }}
+                  className={styles.toggleKnob}
+                />
+             </div>
+          </div>
           <button className={styles.logoutBtn}>
             <LogOut size={20} />
             <span>Sign Out</span>

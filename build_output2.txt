@@ -1,0 +1,33 @@
+﻿
+> strong-tower-frontend@1.0.0 build
+> next build
+
+  Γû▓ Next.js 14.2.0
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/5) ...
+   Generating static pages (1/5) 
+   Generating static pages (2/5) 
+   Generating static pages (3/5) 
+ Γ£ô Generating static pages (5/5)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+Γöî Γùï /                                    9.35 kB         134 kB
+Γö£ Γùï /_not-found                          871 B          87.8 kB
+Γö£ Γùï /dashboard                           6.76 kB         132 kB
+Γö£ ╞Æ /exam/[id]                           5.01 kB         130 kB
+Γöö ╞Æ /results/[id]                        3.58 kB         129 kB
++ First Load JS shared by all            86.9 kB
+  Γö£ chunks/23-d48c37c78336d29a.js        31.3 kB
+  Γö£ chunks/fd9d1056-844a5cc198651369.js  53.6 kB
+  Γöö other shared chunks (total)          1.93 kB
+
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

@@ -19,6 +19,12 @@
   --accent-s: 95%;
   --accent-l: 53%;
   --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+
+  --yellow-h: 48;
+  --yellow-s: 95%;
+  --yellow-l: 50%;
+  --color-yellow: hsl(var(--yellow-h), var(--yellow-s), var(--yellow-l));
+  --color-yellow-glow: hsla(var(--yellow-h), var(--yellow-s), var(--yellow-l), 0.5);
   
   --color-danger: #DC2626;
 
