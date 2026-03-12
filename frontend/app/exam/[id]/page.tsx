@@ -147,7 +147,7 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                             </p>
 
                             <div className={styles.optionsGrid}>
-                                {Object.entries(currentQ.options).map(([key, value]) => (
+                                {Object.entries(currentQ.options).map(([key, value]: [string, string]) => (
                                     <motion.button
                                         key={key}
                                         whileHover={{ scale: 1.01 }}
