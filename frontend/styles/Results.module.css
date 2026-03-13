@@ -4,6 +4,89 @@
   color: white;
   position: relative;
   overflow-x: hidden;
+  transition: background-color 0.4s ease;
+}
+
+/* Yellow & White Theme */
+.lightModeYellow {
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .blobMain,
+.lightModeYellow .blobSecondary {
+  display: none;
+}
+
+.lightModeYellow .header {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .titleText h1,
+.lightModeYellow .titleText p,
+.lightModeYellow .sectionHeader h2,
+.lightModeYellow .sectionHeader p,
+.lightModeYellow .scoreFeedback h2,
+.lightModeYellow .scoreFeedback p,
+.lightModeYellow .subjectMeta h3,
+.lightModeYellow .subjectMeta span,
+.lightModeYellow .statInfo h3,
+.lightModeYellow .statInfo p {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .scoreDisplay {
+  background: white;
+  border-color: #eee;
+}
+
+.lightModeYellow .statCard {
+  background: white;
+  border: 1px solid #eee;
+}
+
+.lightModeYellow .subjectItem {
+  background: white;
+  border: 1px solid #eee;
+}
+
+.lightModeYellow .circlePath {
+  stroke: var(--color-yellow);
+  filter: drop-shadow(0 0 10px var(--color-yellow-glow));
+}
+
+.lightModeYellow .feedbackBadge {
+  background: rgba(234, 179, 8, 0.1) !important;
+  border-color: rgba(234, 179, 8, 0.3) !important;
+  color: var(--color-yellow) !important;
+}
+
+.lightModeYellow .footerPanel {
+  border-top-color: #eee;
+}
+
+.lightModeYellow .backBtn {
+  background: #f1f3f5;
+  border-color: #eee;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .reviewModal {
+  background: white;
+  border-color: #eee;
+}
+
+.lightModeYellow .reviewItem {
+  background: #f8f9fa;
+  border-color: #eee;
+}
+
+.lightModeYellow .modalHeader h2 {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .reviewQ {
+  color: #1a1a1a;
 }
 
 .resultsBg {

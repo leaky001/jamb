@@ -38,6 +38,8 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   const [results, setResults] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
+  const [isYellowTheme, setIsYellowTheme] = React.useState(false);
+
   React.useEffect(() => {
     const savedResults = localStorage.getItem(`exam_results_${params.id}`);
     if (savedResults) {
@@ -50,6 +52,11 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         { subject: 'Chemistry', score: 0, total: 40, color: '#8B5CF6' },
       ]);
     }
+
+    // Load theme preference
+    const savedTheme = localStorage.getItem('isYellowTheme');
+    if (savedTheme === 'true') setIsYellowTheme(true);
+
     setLoading(false);
   }, [params.id]);
 
@@ -87,7 +94,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   if (loading) return <div className={styles.resultsWrapper} style={{display:'flex', alignItems:'center', justifyContent:'center'}}>Loading results...</div>;
 
   return (
-    <div className={styles.resultsWrapper}>
+    <div className={`${styles.resultsWrapper} ${isYellowTheme ? styles.lightModeYellow : ''}`}>
       {/* Background Decor */}
       <div className={styles.resultsBg}>
          <div className={styles.blobMain}></div>
@@ -105,7 +112,12 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               <div className={styles.backBtn} onClick={() => window.location.href = '/dashboard'}>
                  <ArrowLeft size={20} />
               </div>
-              <Logo size={40} color="white" animated={true} />
+              <div 
+                onClick={() => window.location.href = '/'} 
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+              >
+                <Logo size={40} color="white" animated={true} />
+              </div>
               <div className={styles.titleText}>
                  <h1>Performance Insight</h1>
                  <p>Mock Exam ID: #{params.id || '240311-88'}</p>

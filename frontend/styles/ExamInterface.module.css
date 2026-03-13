@@ -4,6 +4,124 @@
   height: 100vh;
   background-color: var(--bg-dark);
   overflow: hidden;
+  transition: background-color 0.4s ease;
+}
+
+/* Yellow & White Theme */
+.lightModeYellow {
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .examHeader {
+  background-color: white !important;
+  border-bottom: 1px solid #eee;
+}
+
+.lightModeYellow .headerLogo span {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .timerDisplay {
+  background: #f1f3f5;
+  color: #1a1a1a;
+  border-color: #eee;
+}
+
+.lightModeYellow .subjectNavBar {
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.lightModeYellow .subjectTab {
+  color: #777;
+}
+
+.lightModeYellow .subjectTab:hover {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .activeTab {
+  color: var(--color-yellow);
+}
+
+.lightModeYellow .tabUnderline {
+  background: var(--color-yellow);
+}
+
+.lightModeYellow .questionText {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .qNum {
+  color: #888;
+}
+
+.lightModeYellow .optionBtn {
+  background: white;
+  border: 1px solid #eee;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .optionBtn:hover {
+  border-color: var(--color-yellow);
+  background: #fffcf0;
+}
+
+.lightModeYellow .optionSelected {
+  background: #fffcf0;
+  border-color: var(--color-yellow);
+}
+
+.lightModeYellow .optionKey {
+  background: #f1f3f5;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .optionSelected .optionKey {
+  background: var(--color-yellow);
+  color: white;
+}
+
+.lightModeYellow .optionValue {
+  color: #444;
+}
+
+.lightModeYellow .checkIcon {
+  color: var(--color-yellow);
+}
+
+.lightModeYellow .pillsBtn {
+  border-color: #eee;
+  color: #555;
+}
+
+.lightModeYellow .pillsBtn:hover:not(:disabled) {
+  background: #f1f3f5;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .questionPalette {
+  background: white;
+  border-left: 1px solid #eee;
+}
+
+.lightModeYellow .paletteBtn {
+  background: #f1f3f5;
+  color: #777;
+  border-color: #eee;
+}
+
+.lightModeYellow .qAnswered {
+  background: #fffcf0;
+  color: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
+.lightModeYellow .qCurrent {
+  background: var(--color-yellow);
+  color: white;
+  border-color: var(--color-yellow);
 }
 
 .examHeader {

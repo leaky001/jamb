@@ -80,6 +80,16 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
     const [timeLeft, setTimeLeft] = useState(120 * 60);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPalette, setShowPalette] = useState(true);
+    const [showReview, setShowReview] = React.useState(false);
+    const [isYellowTheme, setIsYellowTheme] = React.useState(false);
+
+    React.useEffect(() => {
+        // Theme loading
+        const savedTheme = localStorage.getItem('isYellowTheme');
+        if (savedTheme === 'true') {
+            setIsYellowTheme(true);
+        }
+    }, []);
 
     useEffect(() => {
         if (timeLeft <= 0) {
@@ -141,12 +151,12 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
     const currentQ = currentQuestions[currentQuestionIdx];
 
     return (
-        <div className={styles.examWrapper}>
+        <div className={`${styles.examWrapper} ${isYellowTheme ? styles.lightModeYellow : ''}`}>
             {/* Premium Exam Header */}
             <header className={`${styles.examHeader} glass-dark`}>
                 <div className={styles.headerLeft}>
-                    <div className={styles.jambLogo}>
-                       <Logo size={28} color="white" animated={false} />
+                    <div className={styles.headerLogo} onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
+                       <Logo size={32} color="white" animated={true} /> 
                        <span>STRONG TOWER CBT</span>
                     </div>
                 </div>

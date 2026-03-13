@@ -3,14 +3,83 @@
   grid-template-columns: 280px 1fr;
   min-height: 100vh;
   background-color: var(--bg-dark);
+  transition: all 0.4s ease;
+}
+
+/* Yellow & White Theme (Light Mode) */
+.lightModeYellow {
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .mainContainer {
+  background-color: white;
+}
+
+.lightModeYellow h1, 
+.lightModeYellow h2, 
+.lightModeYellow h3 {
+  color: #1a1a1a;
+}
+
+.lightModeYellow .headerTitle p, 
+.lightModeYellow .sectionHeader p,
+.lightModeYellow .subjectInfo p,
+.lightModeYellow .studentsCount {
+  color: #555;
+}
+
+.lightModeYellow .welcomeHero {
+  background: white;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.lightModeYellow .subjectCard {
+  background: white;
+  border: 1px solid #eee;
+  color: #1a1a1a;
+}
+
+.lightModeYellow .subjectCard:hover {
+  border-color: var(--color-yellow);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.lightModeYellow .selectedCard {
+  background: #fffcf0;
+  border-color: var(--color-yellow);
 }
 
 /* Sidebar */
 .sidebar {
-  padding: 40px var(--space-xl);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 40px 20px;
   display: flex;
   flex-direction: column;
+  z-index: 10;
+  transition: all 0.4s ease;
+}
+
+.sidebarLight {
+  background: white;
+  border-right: 1px solid #eee;
+}
+
+.sidebarLight .sidebarBrand span {
+  color: #1a1a1a;
+}
+
+.sidebarLight .sidebarItem {
+  color: #555;
+}
+
+.sidebarLight .sidebarItem:hover {
+  color: var(--color-yellow);
+  background: #fffcf0;
+}
+
+.sidebarLight .navGroupLabel {
+  color: #999;
 }
 
 .sidebarBrand {

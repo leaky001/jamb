@@ -49,8 +49,8 @@ const SidebarItem = ({ icon: Icon, label, active = false, onClick, isYellow }: a
     onClick={onClick}
     className={`${styles.sidebarItem} ${active ? (isYellow ? styles.activeSidebarItemYellow : styles.activeSidebarItem) : ''}`}
   >
-    <Icon size={20} />
-    <span>{label}</span>
+    <Icon size={20} style={{ color: active && isYellow ? 'white' : undefined }} />
+    <span style={{ color: active && isYellow ? 'white' : undefined }}>{label}</span>
     {active && <motion.div layoutId="activePill" className={`${styles.activePill} ${isYellow ? styles.activePillYellow : ''}`} />}
   </motion.button>
 );
@@ -61,6 +61,17 @@ export default function Dashboard() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'history' | 'performance'>('dashboard');
   const [examHistory, setExamHistory] = useState<any[]>([]);
   const [isYellowTheme, setIsYellowTheme] = useState(false);
+
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('isYellowTheme');
+    if (savedTheme === 'true') setIsYellowTheme(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const newVal = !isYellowTheme;
+    setIsYellowTheme(newVal);
+    localStorage.setItem('isYellowTheme', newVal.toString());
+  };
 
   React.useEffect(() => {
     // Load history from localStorage
@@ -102,10 +113,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className={styles.dashboardLayout}>
-      <aside className={`${styles.sidebar} glass-dark`}>
-        <div className={styles.sidebarBrand}>
-          <Logo size={32} color="white" animated={false} />
+    <div className={`${styles.dashboardLayout} ${isYellowTheme ? styles.lightModeYellow : ''}`}>
+      <aside className={`${styles.sidebar} ${isYellowTheme ? styles.sidebarLight : 'glass-dark'}`}>
+        <div className={styles.sidebarBrand} onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
+          <Logo size={32} color={isYellowTheme ? "#111" : "white"} animated={false} />
           <span>Strong Tower</span>
         </div>
 
@@ -126,10 +137,10 @@ export default function Dashboard() {
 
         <div className={styles.sidebarFooter}>
           <div className={styles.themeToggleArea}>
-             <span>Amber Mode</span>
+             <span>Yellow & White</span>
              <div 
                className={`${styles.toggleSwitch} ${isYellowTheme ? styles.toggleActive : ''}`}
-               onClick={() => setIsYellowTheme(!isYellowTheme)}
+               onClick={toggleTheme}
              >
                 <motion.div 
                   animate={{ x: isYellowTheme ? 22 : 0 }}
