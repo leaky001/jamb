@@ -78,22 +78,36 @@ export default function Dashboard() {
         const rawData = localStorage.getItem(key);
         if (!rawData) continue;
         
-        const parsed = JSON.parse(rawData);
-        const results = Array.isArray(parsed) ? parsed : parsed.results;
-        const date = Array.isArray(parsed) ? new Date().toLocaleDateString() : new Date(parsed.date).toLocaleDateString();
-        const time = Array.isArray(parsed) ? '' : new Date(parsed.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        const totalScore = results.reduce((acc: number, curr: any) => acc + curr.score, 0);
-        const totalPossible = results.reduce((acc: number, curr: any) => acc + curr.total, 0);
-        
-        history.push({
-          id: key.replace('exam_results_', ''),
-          date: `${date} ${time}`,
-          score: totalScore,
-          total: totalPossible,
-          subjects: results.map((r: any) => r.subject),
-          rawResults: results
-        });
+        try {
+          const parsed = JSON.parse(rawData);
+          const results = Array.isArray(parsed) ? parsed : (parsed.results || []);
+          
+          let dateStr = "";
+          if (Array.isArray(parsed)) {
+            dateStr = new Date().toLocaleDateString();
+          } else if (parsed.date) {
+            const d = new Date(parsed.date);
+            dateStr = isNaN(d.getTime()) ? new Date().toLocaleDateString() : d.toLocaleDateString();
+          } else {
+            dateStr = new Date().toLocaleDateString();
+          }
+
+          const time = (Array.isArray(parsed) || !parsed.date) ? '' : new Date(parsed.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          
+          const totalScore = results.reduce((acc: number, curr: any) => acc + (curr.score || 0), 0);
+          const totalPossible = results.reduce((acc: number, curr: any) => acc + (curr.total || 0), 0);
+          
+          history.push({
+            id: key.replace('exam_results_', ''),
+            date: `${dateStr} ${time}`.trim(),
+            score: totalScore,
+            total: totalPossible,
+            subjects: results.map((r: any) => r.subject).filter(Boolean),
+            rawResults: results
+          });
+        } catch (e) {
+          console.error("Error parsing exam result:", e);
+        }
       }
     }
     // Sort history by ID/Date (newest first)
@@ -348,10 +362,12 @@ export default function Dashboard() {
                         {(() => {
                           const stats: Record<string, {score: number, total: number}> = {};
                           examHistory.forEach(session => {
-                            session.rawResults?.forEach((r: any) => {
+                            if (!session.rawResults) return;
+                            session.rawResults.forEach((r: any) => {
+                              if (!r.subject) return;
                               if (!stats[r.subject]) stats[r.subject] = {score: 0, total: 0};
-                              stats[r.subject].score += r.score;
-                              stats[r.subject].total += r.total;
+                              stats[r.subject].score += (r.score || 0);
+                              stats[r.subject].total += (r.total || 0);
                             });
                           });
 
