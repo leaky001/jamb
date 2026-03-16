@@ -80,7 +80,6 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
     const [timeLeft, setTimeLeft] = useState(120 * 60);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPalette, setShowPalette] = useState(true);
-    const [showReview, setShowReview] = React.useState(false);
     const [isYellowTheme, setIsYellowTheme] = React.useState(false);
 
     React.useEffect(() => {
@@ -156,8 +155,8 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
             <header className={`${styles.examHeader} glass-dark`}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerLogo} onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
-                       <Logo size={32} color="white" animated={true} /> 
-                       <span>STRONG TOWER CBT</span>
+                       <Logo size={32} color={isYellowTheme ? '#111' : 'white'} animated={true} /> 
+                       <span style={{ color: isYellowTheme ? '#111' : 'white' }}>STRONG TOWER CBT</span>
                     </div>
                 </div>
 
@@ -209,7 +208,7 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                         >
                             <div className={styles.questionMetadata}>
                                 <span className={styles.qSub}>{subjects[activeSubjectIdx]}</span>
-                                <span className={styles.qNum}>Question {currentQ.question_number} of 45</span>
+                                <span className={styles.qNum}>Question {currentQ.question_number} of {currentQuestions.length}</span>
                             </div>
 
                             <p className={styles.questionText}>
@@ -247,12 +246,12 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
                             
                             <div className={styles.examProgress}>
                                <div className={styles.progressLabel}>
-                                   {subjects[activeSubjectIdx]} Progress: {currentQuestionIdx + 1} / 45
+                                   {subjects[activeSubjectIdx]} Progress: {currentQuestionIdx + 1} / {currentQuestions.length}
                                </div>
                                <div className={styles.miniProgressBar}>
                                   <motion.div 
                                     className={styles.miniProgressFill}
-                                    style={{ width: `${((currentQuestionIdx + 1) / 45) * 100}%` }}
+                                    style={{ width: `${((currentQuestionIdx + 1) / currentQuestions.length) * 100}%` }}
                                   />
                                </div>
                             </div>
