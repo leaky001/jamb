@@ -326,7 +326,13 @@ export default function Dashboard() {
                    <div className={`${styles.analyticCard} glass`}>
                       <Target size={32} />
                       <h3>Core Accuracy</h3>
-                      <div className={styles.analyticValue}>{examHistory.length > 0 ? Math.round(examHistory.reduce((a,b)=>a+b.score,0)/examHistory.reduce((a,b)=>a+b.total,0)*100) : 0}%</div>
+                      <div className={styles.analyticValue}>
+                         {(() => {
+                            const total = examHistory.reduce((a,b)=>a+(b.total||0),0);
+                            const score = examHistory.reduce((a,b)=>a+(b.score||0),0);
+                            return total > 0 ? Math.round((score / total) * 100) : 0;
+                         })()}%
+                       </div>
                       <p>Global ranking: Top 15%</p>
                    </div>
                    <div className={`${styles.analyticCard} glass`}>
@@ -350,7 +356,7 @@ export default function Dashboard() {
                           });
 
                           return Object.entries(stats).map(([subj, data]) => {
-                            const percent = Math.round((data.score / data.total) * 100);
+                            const percent = data.total > 0 ? Math.round((data.score / data.total) * 100) : 0;
                             return (
                               <div key={subj} className={styles.subjectStatRow}>
                                 <div className={styles.subjName}>{subj}</div>
