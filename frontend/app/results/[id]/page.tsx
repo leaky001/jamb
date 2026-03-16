@@ -41,9 +41,10 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   const [isYellowTheme, setIsYellowTheme] = React.useState(false);
 
   React.useEffect(() => {
-    const savedResults = localStorage.getItem(`exam_results_${params.id}`);
-    if (savedResults) {
-      setResults(JSON.parse(savedResults));
+    const savedData = localStorage.getItem(`exam_results_${params.id}`);
+    if (savedData) {
+      const parsed = JSON.parse(savedData);
+      setResults(Array.isArray(parsed) ? parsed : parsed.results);
     } else {
       setResults([
         { subject: 'English Language', score: 0, total: 60, color: '#1F3A8A' },

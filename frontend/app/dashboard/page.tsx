@@ -75,18 +75,29 @@ export default function Dashboard() {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith('exam_results_')) {
-        const results = JSON.parse(localStorage.getItem(key) || '[]');
+        const rawData = localStorage.getItem(key);
+        if (!rawData) continue;
+        
+        const parsed = JSON.parse(rawData);
+        const results = Array.isArray(parsed) ? parsed : parsed.results;
+        const date = Array.isArray(parsed) ? new Date().toLocaleDateString() : new Date(parsed.date).toLocaleDateString();
+        const time = Array.isArray(parsed) ? '' : new Date(parsed.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
         const totalScore = results.reduce((acc: number, curr: any) => acc + curr.score, 0);
         const totalPossible = results.reduce((acc: number, curr: any) => acc + curr.total, 0);
+        
         history.push({
           id: key.replace('exam_results_', ''),
-          date: new Date().toLocaleDateString(), // Mock date for now
+          date: `${date} ${time}`,
           score: totalScore,
           total: totalPossible,
-          subjects: results.map((r: any) => r.subject)
+          subjects: results.map((r: any) => r.subject),
+          rawResults: results
         });
       }
     }
+    // Sort history by ID/Date (newest first)
+    history.sort((a, b) => b.id.localeCompare(a.id));
     setExamHistory(history);
   }, []);
 
@@ -325,11 +336,40 @@ export default function Dashboard() {
                       <p>3 weeks active streak</p>
                    </div>
                  </div>
-                 
-                 <div className={`${styles.subjectPerformance} glass`}>
-                    <h3>Performance by Subject</h3>
-                    <p>Coming soon: Detailed topic-wise breakdown based on your AI-generated questions.</p>
-                 </div>
+                                  <div className={`${styles.subjectPerformance} glass`}>
+                     <h3>Performance by Subject</h3>
+                     <div className={styles.subjectStatsList}>
+                        {(() => {
+                          const stats: Record<string, {score: number, total: number}> = {};
+                          examHistory.forEach(session => {
+                            session.rawResults?.forEach((r: any) => {
+                              if (!stats[r.subject]) stats[r.subject] = {score: 0, total: 0};
+                              stats[r.subject].score += r.score;
+                              stats[r.subject].total += r.total;
+                            });
+                          });
+
+                          return Object.entries(stats).map(([subj, data]) => {
+                            const percent = Math.round((data.score / data.total) * 100);
+                            return (
+                              <div key={subj} className={styles.subjectStatRow}>
+                                <div className={styles.subjName}>{subj}</div>
+                                <div className={styles.subjBarTrack}>
+                                  <motion.div 
+                                    className={styles.subjBarFill} 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${percent}%` }}
+                                    style={{ background: subj === 'English Language' ? '#1F3A8A' : subj === 'Mathematics' ? '#10B981' : subj === 'Physics' ? '#F97316' : '#8B5CF6' }}
+                                  />
+                                </div>
+                                <div className={styles.subjPercent}>{percent}%</div>
+                              </div>
+                            );
+                          });
+                        })()}
+                        {examHistory.length === 0 && <p>No data available yet. Complete an exam to see your subject breakdown.</p>}
+                     </div>
+                  </div>
                </motion.div>
              )}
            </AnimatePresence>

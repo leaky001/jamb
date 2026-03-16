@@ -647,12 +647,43 @@
   border-radius: 30px;
 }
 
-.subjectPerformance h3 {
-  margin-bottom: 15px;
+.subjectStatsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 25px;
 }
 
-.subjectPerformance p {
-  color: var(--gray-500);
+.subjectStatRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.subjName {
+  width: 140px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.subjBarTrack {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.subjBarFill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.subjPercent {
+  width: 50px;
+  text-align: right;
+  font-weight: 800;
+  color: white;
 }
 
 /* Existing Tablet Adjustment */

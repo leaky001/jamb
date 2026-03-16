@@ -130,7 +130,10 @@ export default function ExamInterface({ params }: { params: { id: string } }) {
         });
 
         // Persist results for the Results page to pick up
-        localStorage.setItem(`exam_results_${params.id}`, JSON.stringify(calculatedResults));
+        localStorage.setItem(`exam_results_${params.id}`, JSON.stringify({
+            results: calculatedResults,
+            date: new Date().toISOString()
+        }));
 
         setTimeout(() => {
             window.location.href = `/results/${params.id}`;
